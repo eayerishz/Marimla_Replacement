@@ -31,6 +31,12 @@
             border-radius: 8px;
             background-color: #f9f9f9;
         }
+        .project-status {
+            font-size: 1.2em; /* Increase font size for visibility */
+            font-weight: bold;
+            color: #d9534f; /* Change color for emphasis */
+            margin-top: 10px; /* Add margin for spacing */
+        }
         .material-table {
             width: 100%;
             margin-bottom: 20px;
@@ -67,6 +73,12 @@
             display: flex;
             gap: 5px;
         }
+        .table-scroll {
+            max-height: 400px; /* Adjust the height as needed */
+            overflow-y: auto; /* Enable vertical scrolling */
+            margin-bottom: 20px; /* Add space below the table */
+            border: 1px solid #d4c4ff; /* Optional: add border for aesthetics */
+        }
     </style>
 </head>
 <body>
@@ -93,19 +105,20 @@
                     <p><strong>Area Size:</strong> {{ project.area_size }} sq.m</p>
                     <p><strong>Description:</strong> {{ project.description }}</p>
                     <p><strong>Location:</strong> {{ project.location }}</p>
-                    <p><strong>Status:</strong> {{ project.status }}</p>
+                    <p><strong>Status:</strong> <span class="project-status">{{ project.status }}</span></p> <!-- Increased visibility for status -->
                     <p><strong>Created On:</strong> {{ project.created_at }}</p>
                     <p><strong>Updated On:</strong> {{ project.updated_at }}</p>
                 </div>
             {% endif %}
 
             {% if user.is_superuser %}
+                <h5>Action</h5>
                 <a href="{% url 'add_project_element' project.id %}" class="btn btn-primary">Add Project Element</a>
                 <a href="{% url 'add_project_material' project.id %}" class="btn btn-primary">Add Material</a>
             {% endif %}
 
             <h4>Project Elements and Materials</h4>
-            <div class="table-responsive"> <!-- Added this div for responsive behavior -->
+            <div class="table-scroll">
                 <table class="table table-bordered material-table">
                     <thead>
                         <tr>
@@ -116,9 +129,9 @@
                             <th>Price per Qty</th>
                             <th>Total Cost</th>
                             <th>Markup %</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                            
+                            {% if user.is_superuser %}
+                                <th>Action</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -143,7 +156,6 @@
                                         <td>
                                             <input type="number" name="markup_percentage" value="{{ material.markup_percentage }}" min="0" step="0.01" required>
                                         </td>
-                                        <td>{{ material.status|capfirst }}</td>
                                         <td class="action-buttons">
                                             <button type="submit" class="btn btn-success btn-sm">Update</button>
                                             </form>
@@ -154,31 +166,25 @@
                                         <td>${{ material.price_per_qty }}</td>
                                         <td>${{ material.total_cost }}</td>
                                         <td>{{ material.markup_percentage }}%</td>
-                                        <td>{{ material.status|capfirst }}</td>
-                                        <td class="action-buttons">
-                                            <form method="post" action="{% url 'approve_material' project.id %}">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="material_id" value="{{ material.id }}">
-                                                <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
-                                                <button type="submit" name="action" value="decline" class="btn btn-danger btn-sm">Decline</button>
-                                            </form>
-                                        </td>
                                     {% endif %}
                                 </tr>
                             {% endfor %}
                         {% endfor %}
                     </tbody>
                 </table>
-            </div> <!-- Closing div for responsive table -->
+            </div>
 
             <div class="text-center">
                 <a href="{% url 'project_list' %}" class="btn btn-secondary">Back to Project List</a>
+                {% if not user.is_superuser %}
+                    <a href="{% url 'approve_project' project.id %}" class="btn btn-success">Approve</a>
+                    <a href="{% url 'decline_project' project.id %}" class="btn btn-danger">Decline</a>
+                {% endif %}
             </div>
         </div>
-    </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
 </html>

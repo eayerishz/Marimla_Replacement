@@ -369,3 +369,44 @@ def approve_material(request, project_id):
         material.save()
 
     return redirect('project_detail', project_id=project_id)
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Project
+
+
+@login_required
+def approve_project(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+
+
+    if  project.user == request.user:
+        project.status = "Completed"
+        project.save()
+        messages.success(request, "Project approved successfully.")
+    else:
+        messages.warning(request,
+                         f"{request.user.username} attempted to approve project {project.id}, but does not have permission.")
+
+    return redirect('project_list')
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Project
+
+@login_required
+def decline_project(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+
+
+    if  project.user == request.user:
+        project.status = "Declined"
+        project.save()
+        messages.success(request, "Project declined successfully.")
+    else:
+        messages.warning(request, "You do not have permission to decline this project.")
+
+    return redirect('project_list')
