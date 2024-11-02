@@ -9,9 +9,19 @@
     <style>
         body {
             background: linear-gradient(135deg, #ffe3f3, #d4c4ff);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
             font-family: Arial, sans-serif;
             color: #333;
+            overflow: hidden; /* Prevent scrolling */
         }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .project-container {
             max-width: 1000px;
             margin: auto;
@@ -19,11 +29,14 @@
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 2px solid #5c2d91; /* Added border */
         }
+
         h2, h4 {
             text-align: center;
             color: #5c2d91;
         }
+
         .project-info {
             margin-bottom: 30px;
             padding: 20px;
@@ -31,38 +44,48 @@
             border-radius: 8px;
             background-color: #f9f9f9;
         }
+
         .material-table {
             width: 100%;
             margin-bottom: 20px;
         }
+
         .material-table th, .material-table td {
             text-align: left;
             vertical-align: middle;
         }
+
         .error-messages {
             color: red;
             margin-bottom: 20px;
         }
+
         .btn {
             margin-top: 10px;
             border-radius: 8px;
         }
+
         .btn-primary {
             background-color: #5c2d91;
         }
+
         .btn-primary:hover {
             background-color: #7a46b7;
         }
+
         .btn-secondary {
             background-color: #6c757d;
         }
+
         .btn-secondary:hover {
             background-color: #5a6268;
         }
+
         .material-table th {
             background-color: #d4b9ff;
             color: #5c2d91;
         }
+
         .action-buttons {
             display: flex;
             gap: 5px;
@@ -117,9 +140,7 @@
                         <th>Total Cost</th>
                         <th>Markup %</th>
                         <th>Status</th>
-                        {% if user.is_superuser %}
-                            <th>Action</th>
-                        {% endif %}
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>

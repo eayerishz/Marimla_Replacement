@@ -7,8 +7,8 @@
 <style>
     /* Background gradient for a galaxy effect */
     body {
-        background: linear-gradient(135deg, #ffe3f3, #d4c4ff, #d4b9ff, #fcc1f0);
-        background-size: 50% 50%;
+        background: linear-gradient(135deg, #ffccf2, #d4c4ff, #d4b9ff, #fcc1f0);
+        background-size: 200% 200%;
         animation: galaxyBackground 15s ease infinite;
         font-family: Arial, sans-serif;
         color: #333;
@@ -28,7 +28,7 @@
         left: 0;
         height: 100%;
         width: 250px;
-        background: linear-gradient(180deg, #5c2d91, #7a46b7);
+        background: linear-gradient(180deg, #a25797, #7a46b7);
         padding: 30px 20px; /* Increased padding for better spacing */
         color: white;
         box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
@@ -74,22 +74,23 @@
         overflow-x: hidden; /* Prevent horizontal scrolling for main content */
     }
     .content h2 {
-        color: #5c2d91;
+        color: #a25797;
         font-weight: bold;
         margin-bottom: 20px; /* Increased bottom margin */
     }
 
-    /* Vertical layout for project categories */
+    /* Project category styling */
     .project-category {
         margin-bottom: 40px; /* Increased bottom margin for better separation */
         padding: 20px;
         background: rgba(255, 255, 255, 0.9);
         border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(92, 45, 145, 0.2);
+        border: 2px solid #a25797; /* Added border */
+        box-shadow: 0 8px 20px rgba(92, 45, 145, 0.3); /* Enhanced shadow */
     }
     .project-category h3 {
         text-align: center;
-        color: #5c2d91;
+        color: #a25797;
         font-weight: bold;
         margin-bottom: 20px; /* Increased bottom margin */
     }
@@ -133,10 +134,10 @@
 <div class="sidebar">
     <h4>Navigation</h4>
     {% if user.is_superuser %}
-                <a href="{% url 'create_quotation' %}">Create a Quote</a>
-            {% else %}
-                 <a href="{% url 'create_quotation' %}">Request a Quote</a>
-            {% endif %}
+        <a href="{% url 'create_quotation' %}">Create a Quote</a>
+    {% else %}
+        <a href="{% url 'create_quotation' %}">Request a Quote</a>
+    {% endif %}
     <form action="{% url 'logout' %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-logout">Log Out</button>
@@ -160,9 +161,6 @@
                             <div class="card-actions">
                                 <a href="{% url 'project_detail' project.id %}" class="btn btn-primary">View</a>
                                 <a href="{% url 'project_delete' project.id %}" class="btn btn-danger">Delete</a>
-                                {% if user.is_superuser %}
-
-                                {% endif %}
                             </div>
                         </div>
                     {% endfor %}

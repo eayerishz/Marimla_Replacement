@@ -5,13 +5,19 @@
 
 {% block content %}
     <style>
-        /* Body background - pastel galaxy gradient */
+        /* Body background - pastel pink and purple gradient */
         body {
-            background: linear-gradient(135deg, #ffe3f3, #d4c4ff, #d4b9ff, #fcc1f0);
+            background: linear-gradient(135deg, #ffe3f3, #d4c4ff, #fcc1f0);
             background-size: 400% 400%;
             animation: gradientBackground 15s ease infinite;
             font-family: Arial, sans-serif;
             color: #333;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Full height */
+            display: flex; /* Flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
         }
 
         @keyframes gradientBackground {
@@ -22,7 +28,8 @@
 
         .project-container {
             max-width: 600px;
-            margin: auto;
+            width: 100%; /* Responsive width */
+            margin: 0 auto;
             padding: 30px;
             background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
             border-radius: 15px;
@@ -82,42 +89,40 @@
         }
     </style>
 
-    <div class="container mt-5 flex-grow-1">
-        <div class="project-container">
-            <h2>Create a New Project</h2>
-            <form id="quotationForm" method="post" action="{% url 'create_quotation' %}">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="project_name">Project Name</label>
-                    <input type="text" class="form-control" id="project_name" name="project_name" required>
+    <div class="project-container">
+        <h2>Create a New Project</h2>
+        <form id="quotationForm" method="post" action="{% url 'create_quotation' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="project_name">Project</label>
+                <input type="text" class="form-control" id="project_name" name="project_name" required>
+            </div>
+            <div class="form-group">
+                <label for="area_size">Area Size (sq.m)</label>
+                <input type="number" class="form-control" id="area_size" name="area_size" required>
+            </div>
+            <div class="form-group">
+                <label>Select Project Elements:</label>
+                <div>
+                    <label><input type="radio" name="projectElement" value="Foundation" onclick="updateMaterials()" required> Foundation</label><br>
+                    <label><input type="radio" name="projectElement" value="Walls" onclick="updateMaterials()" required> Walls</label><br>
+                    <label><input type="radio" name="projectElement" value="Roof" onclick="updateMaterials()" required> Roof</label><br>
+                    <label><input type="radio" name="projectElement" value="Flooring" onclick="updateMaterials()" required> Flooring</label><br>
+                    <label><input type="radio" name="projectElement" value="Framing" onclick="updateMaterials()" required> Framing</label><br>
+                    <label><input type="radio" name="projectElement" value="Window and Door Installation" onclick="updateMaterials()" required> Window and Door Installation</label><br>
+                    <label><input type="radio" name="projectElement" value="Electrical" onclick="updateMaterials()" required> Electrical</label><br>
+                    <label><input type="radio" name="projectElement" value="Plumbing" onclick="updateMaterials()" required> Plumbing</label>
                 </div>
-                <div class="form-group">
-                    <label for="area_size">Area Size (sq.m)</label>
-                    <input type="number" class="form-control" id="area_size" name="area_size" required>
-                </div>
-                <div class="form-group">
-                    <label>Select Project Elements:</label>
-                    <div>
-                        <label><input type="radio" name="projectElement" value="Foundation" onclick="updateMaterials()"> Foundation</label><br>
-                        <label><input type="radio" name="projectElement" value="Walls" onclick="updateMaterials()"> Walls</label><br>
-                        <label><input type="radio" name="projectElement" value="Roof" onclick="updateMaterials()"> Roof</label><br>
-                        <label><input type="radio" name="projectElement" value="Flooring" onclick="updateMaterials()"> Flooring</label><br>
-                        <label><input type="radio" name="projectElement" value="Framing" onclick="updateMaterials()"> Framing</label><br>
-                        <label><input type="radio" name="projectElement" value="Window and Door Installation" onclick="updateMaterials()"> Window and Door Installation</label><br>
-                        <label><input type="radio" name="projectElement" value="Electrical" onclick="updateMaterials()"> Electrical</label><br>
-                        <label><input type="radio" name="projectElement" value="Plumbing" onclick="updateMaterials()"> Plumbing</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Select Materials:</label>
-                    <fieldset id="materialsFieldset">
-                        <!-- Dynamic materials will be injected here -->
-                    </fieldset>
-                </div>
-                <button type="submit" class="btn btn-primary">Request Quotation</button>
-            </form>
-            <a href="{% url 'project_list' %}" class="btn btn-secondary mt-3">View Project List</a>
-        </div>
+            </div>
+            <div class="form-group">
+                <label>Select Materials:</label>
+                <fieldset id="materialsFieldset">
+                    <!-- Dynamic materials will be injected here -->
+                </fieldset>
+            </div>
+            <button type="submit" class="btn btn-custom">Request Quotation</button>
+        </form>
+        <a href="{% url 'project_list' %}" class="btn btn-secondary mt-3">View Project List</a>
     </div>
 
     <script>
@@ -159,7 +164,7 @@
 
             materials.forEach(material => {
                 const label = document.createElement('label');
-                label.innerHTML = `<input type="radio" name="material" value="${material}"> ${material}`;
+                label.innerHTML = `<input type="radio" name="material" value="${material}" required> ${material}`;
                 materialsFieldset.appendChild(label);
                 materialsFieldset.appendChild(document.createElement('br'));
             });

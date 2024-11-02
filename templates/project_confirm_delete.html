@@ -1,13 +1,59 @@
 {% extends "quotations/base.html" %}
 
 {% block content %}
-<div class="content">
-    <h2>Confirm Delete</h2>
-    <p>Are you sure you want to delete the project: "{{ object.description }}"?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Confirm Delete</button>
-        <a href="{% url 'project_list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(270deg, #ff77ff, #8a2be2);
+        background-size: 400% 400%;
+        animation: gradientAnimation 15s ease infinite;
+    }
+
+    @keyframes gradientAnimation {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .content {
+        background-color: rgba(34, 34, 34, 0.9); /* Dark shade */
+        color: white; /* Text color for contrast */
+        padding: 40px; /* Increased padding */
+        border-radius: 12px; /* Slightly larger border radius */
+        border: 2px solid rgba(255, 255, 255, 0.5); /* Border with slight transparency */
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5); /* More pronounced shadow */
+        text-align: center; /* Center text */
+        max-width: 600px; /* Limit max width for larger screens */
+        width: 100%; /* Make it responsive */
+    }
+
+    h2 {
+        font-size: 2.5rem; /* Increase heading size */
+    }
+
+    p {
+        font-size: 1.25rem; /* Increase paragraph size */
+    }
+
+    .btn {
+        margin: 15px; /* Increased margin for buttons */
+        padding: 10px 20px; /* Larger button padding */
+    }
+</style>
+
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="content">
+        <h2>Confirm Delete</h2>
+        <p>Are you sure you want to delete the project: "{{ object.description }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+            <a href="{% url 'project_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
 </div>
 {% endblock %}
