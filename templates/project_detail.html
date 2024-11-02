@@ -90,6 +90,7 @@
             {% else %}
                 <div class="project-info">
                     <p><strong>Project ID:</strong> {{ project.id }}</p>
+                    <p><strong>Area Size:</strong> {{ project.area_size }} sq.m</p>
                     <p><strong>Description:</strong> {{ project.description }}</p>
                     <p><strong>Location:</strong> {{ project.location }}</p>
                     <p><strong>Status:</strong> {{ project.status }}</p>
@@ -116,7 +117,7 @@
                         <th>Total Cost</th>
                         <th>Markup %</th>
                         <th>Status</th>
-                        {% if not user.is_superuser %}
+                        {% if user.is_superuser %}
                             <th>Action</th>
                         {% endif %}
                     </tr>
@@ -127,14 +128,34 @@
                             <tr>
                                 <td>{{ element.name }}</td>
                                 <td>{{ material.name }}</td>
-                                <td>{{ material.qty }}</td>
-                                <td>{{ material.unit }}</td>
-                                <td>${{ material.price_per_qty }}</td>
-                                <td>${{ material.total_cost }}</td>
-                                <td>{{ material.markup_percentage }}%</td>
-                                <td>{{ material.status|capfirst }}</td> <!-- Displaying the status -->
-
-                                {% if not user.is_superuser %}
+                                {% if user.is_superuser %}
+                                    <td>
+                                        <form method="post" action="{% url 'update_material' material.id %}">
+                                            {% csrf_token %}
+                                            <input type="number" name="qty" value="{{ material.qty }}" min="0" required>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="unit" value="{{ material.unit }}" required>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="price_per_qty" value="{{ material.price_per_qty }}" step="0.01" required>
+                                    </td>
+                                    <td>${{ material.total_cost }}</td>
+                                    <td>
+                                        <input type="number" name="markup_percentage" value="{{ material.markup_percentage }}" min="0" step="0.01" required>
+                                    </td>
+                                    <td>{{ material.status|capfirst }}</td>
+                                    <td class="action-buttons">
+                                        <button type="submit" class="btn btn-success btn-sm">Update</button>
+                                        </form>
+                                    </td>
+                                {% else %}
+                                    <td>{{ material.qty }}</td>
+                                    <td>{{ material.unit }}</td>
+                                    <td>${{ material.price_per_qty }}</td>
+                                    <td>${{ material.total_cost }}</td>
+                                    <td>{{ material.markup_percentage }}%</td>
+                                    <td>{{ material.status|capfirst }}</td>
                                     <td class="action-buttons">
                                         <form method="post" action="{% url 'approve_material' project.id %}">
                                             {% csrf_token %}

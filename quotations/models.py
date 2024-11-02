@@ -11,6 +11,7 @@ class Project(models.Model):
     ]
 
     name = models.CharField(max_length=100)
+    area_size = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     description = models.TextField()  # Changed to TextField for longer descriptions
     location = models.CharField(max_length=100)
     start_date = models.DateField(blank=True, null=True)

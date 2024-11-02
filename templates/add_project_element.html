@@ -73,7 +73,7 @@
             <h2>Add Project Element</h2>
 
             {% if user.is_superuser %}
-                <form method="post">
+                <form method="post" action="{% url 'add_project_element' project.id %}"> <!-- Ensure correct action URL -->
                     {% csrf_token %}
                     {{ form.as_p }}
                     {% if form.errors %}

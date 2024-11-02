@@ -26,20 +26,66 @@ def register(request):
     return render(request, "register.html", {"form": form})
 
 
+from django.shortcuts import get_object_or_404, redirect, render
+from .models import Project
+from .forms import ProjectUpdateForm
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+@login_required
 def project_detail(request, project_id):
+    logger.debug(f"Fetching project with ID: {project_id}")
     project = get_object_or_404(Project, id=project_id)
     form = None
 
-    if is_superuser(request.user):
+    if request.user.is_superuser:
         if request.method == "POST":
             form = ProjectUpdateForm(request.POST, instance=project)
             if form.is_valid():
                 form.save()
-                return redirect("project_list")
+                return redirect('project_detail', project_id=project.id)
         else:
             form = ProjectUpdateForm(instance=project)
 
-    return render(request, "project_detail.html", {"project": project, "form": form})
+    return render(request, "project_detail.html", {
+        "project": project,
+        "form": form,
+    })
+
+
+
+
+from django.shortcuts import redirect, get_object_or_404
+from django.http import HttpResponse
+from .models import Material  # Import your Material model
+
+@login_required
+def update_material(request, material_id):
+    material = get_object_or_404(Material, id=material_id)
+
+    if request.method == 'POST':
+        try:
+            # Fetch and convert the values from the POST request
+            material.qty = int(float(request.POST.get('qty', 0)))  # Convert to float first, then to int
+            material.unit = request.POST.get('unit')
+            material.price_per_qty = float(request.POST.get('price_per_qty', 0))
+            material.markup_percentage = float(request.POST.get('markup_percentage', 0))
+
+            # Save the changes to the database
+            material.save()
+
+            # Redirect back to the project details
+            return redirect('project_detail', project_id=material.element.project.id)
+
+        except ValueError as e:
+            return HttpResponse(f"Invalid input: {e}", status=400)  # Handle invalid conversions
+
+    return HttpResponse(status=405)  # Method Not Allowed for non-POST requests
+
+
+
 
 
 def home(request):
@@ -73,29 +119,56 @@ def user_logout(request):
     return redirect("home")
 
 
+from django.shortcuts import render, redirect
+from .models import Project, ProjectElement, Material
+from django.urls import reverse
+import datetime
+
 @login_required
 def create_project(request):
     if request.method == "POST":
+        # Extract form data
+        project_name = request.POST.get("project_name")
         area_size = request.POST.get("area_size")
         project_element = request.POST.get("projectElement")
-        material = request.POST.get("material")
+        material_name = request.POST.get("material")
 
-        project = Project(
-            name=f"Project for {request.user.username}",
+        # Create the Project
+        project = Project.objects.create(
+            name=project_name,
+            area_size=area_size,
             status="Pending",
             start_date=datetime.date.today(),
-            end_date=None,
             user=request.user,
         )
-        project.save()
-        print(
-            f"Area Size: {area_size}, Element: {project_element}, Material: {material}"
+
+        # Create the ProjectElement linked to the project
+        element = ProjectElement.objects.create(project=project, name=project_element)
+
+        # Create the Material linked to the element with default values
+        Material.objects.create(
+            element=element,
+            name=material_name,
+            qty=10,            # Replace with actual data if available
+            unit="pcs",
+            price_per_qty=100,  # Example default price
+            markup_percentage=10,
         )
 
-        return redirect("project_list")
+        return redirect(reverse('project_list'))  # Redirect to the project list view after creation
 
     form = QuotationForm()
     return render(request, "create_project.html", {"form": form})
+
+
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView
+from .models import Project  # Replace with your model's name if it's different
+
+class ProjectDeleteView(DeleteView):
+    model = Project
+    template_name = 'project_confirm_delete.html'  # Create this template for confirmation
+    success_url = reverse_lazy('project_list')  # Redirect to the project list page after deletion
 
 
 @login_required
@@ -143,20 +216,21 @@ def admin_dashboard(request):
         },
     )
 
+from django.shortcuts import redirect, render, get_object_or_404
+from .models import Project, ProjectElement, Material
+from .forms import ProjectElementForm, MaterialForm
+
+
 def add_project_element(request, project_id):
     project = get_object_or_404(Project, id=project_id)
-    form = None
 
-    if is_superuser(request.user):
-        if request.method == "POST":
-            form = ProjectElementForm(request.POST, project=project)
-            if form.is_valid():
-                element = form.save(commit=False)
-                element.project = project
-                element.save()
-                return redirect("project_list")
-        else:
-            form = ProjectElementForm(project=project)
+    if request.method == "POST":
+        form = ProjectElementForm(request.POST, project=project)
+        if form.is_valid():
+            form.save()  # This will save the element and link it to the project
+            return redirect('project_detail', project_id=project_id)
+    else:
+        form = ProjectElementForm(project=project)
 
     return render(
         request, "add_project_element.html", {"project": project, "form": form}
@@ -164,20 +238,22 @@ def add_project_element(request, project_id):
 
 def add_project_material(request, project_id):
     project = get_object_or_404(Project, id=project_id)
-    form = None
 
-    if is_superuser(request.user):
-        if request.method == "POST":
-            form = MaterialForm(request.POST)
-            if form.is_valid():
-                form.save()
-                return redirect("project_list")
-        else:
-            form = MaterialForm()
+    if request.method == 'POST':
+        form = MaterialForm(request.POST)
+        if form.is_valid():
+            material = form.save(commit=False)
+            material.project = project
+            material.save()
+            return redirect('project_detail', project_id=project.id)  # Redirect to project details
+    else:
+        form = MaterialForm()
 
     return render(
         request, "add_project_material.html", {"project": project, "form": form}
     )
+
+
 
 @login_required
 def update_project(request, project_id):
