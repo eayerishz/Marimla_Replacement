@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if form.instance.pk %}Update Pricing{% else %}Create Pricing{% endif %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>{% if form.instance.pk %}Update Pricing{% else %}Create Pricing{% endif %}</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_project" class="form-label">Project</label>
+                {{ form.project|as_widget(attrs={'class': 'form-control'}) }}
+                {% if form.project.errors %}
+                    <div class="text-danger">{{ form.project.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="id_price" class="form-label">Price</label>
+                {{ form.price|as_widget(attrs={'class': 'form-control', 'placeholder': 'Enter price'}) }}
+                {% if form.price.errors %}
+                    <div class="text-danger">{{ form.price.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="id_materials" class="form-label">Materials</label>
+                {{ form.materials|as_widget(attrs={'class': 'form-control', 'multiple': 'multiple'}) }}
+                {% if form.materials.errors %}
+                    <div class="text-danger">{{ form.materials.errors }}</div>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'pricing_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details - Construction Project Quotation System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1, #fbc2eb);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        .project-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.9); /* Slight transparency for the container */
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #5c5c5c; /* Darker color for headings */
+        }
+        .project-info {
+            margin-bottom: 20px;
+        }
+        .material-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .material-table th, .material-table td {
+            text-align: left;
+        }
+        .error-messages {
+            color: red; /* Color for error messages */
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background-color: #ff6f91; /* Pastel pink */
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #ff4b5c; /* Darker pink on hover */
+        }
+        .btn-secondary {
+            background-color: #a18cd1; /* Pastel purple */
+            border: none;
+        }
+        .btn-secondary:hover {
+            background-color: #7b5b9a; /* Darker purple on hover */
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="project-container">
+            <h2>Add Project Material</h2>
+
+            {% if user.is_superuser %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% if form.errors %}
+                    <div class="error-messages">
+                        {% for field, errors in form.errors.items %}
+                            <p>{{ field }}: {{ errors|join:", " }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+            {% else %}
+                <div class="project-info">
+                    <p><strong>Project ID:</strong> {{ project.id }}</p>
+                    <p><strong>Description:</strong> {{ project.description }}</p>
+                    <p><strong>Location:</strong> {{ project.location }}</p>
+                    <p><strong>Status:</strong> {{ project.status }}</p>
+                    <p><strong>Created On:</strong> {{ project.created_at }}</p>
+                    <p><strong>Updated On:</strong> {{ project.updated_at }}</p>
+                </div>
+            {% endif %}
+    
+            <div class="text-center">
+                <a href="{% url 'project_list' %}" class="btn btn-secondary">Back to Project List</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

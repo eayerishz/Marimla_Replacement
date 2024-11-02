@@ -1,0 +1,181 @@
+{% extends "quotations/base.html" %}
+{% load static %}
+
+{% block title %}Project Quotations - CPQS{% endblock %}
+
+{% block extra_styles %}
+<style>
+    /* Background gradient for a galaxy effect */
+    body {
+        background: linear-gradient(135deg, #ffe3f3, #d4c4ff, #d4b9ff, #fcc1f0);
+        background-size: 400% 400%;
+        animation: galaxyBackground 15s ease infinite;
+        font-family: Arial, sans-serif;
+        color: #333;
+        margin: 0; /* Remove default body margin */
+    }
+
+    @keyframes galaxyBackground {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Sidebar styling */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 250px;
+        background: linear-gradient(180deg, #5c2d91, #7a46b7);
+        padding: 30px 20px; /* Increased padding for better spacing */
+        color: white;
+        box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+    }
+    .sidebar h4 {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 40px; /* Increased bottom margin */
+    }
+    .sidebar a {
+        padding: 15px 25px; /* Increased padding for links */
+        margin: 10px 0; /* Increased margin */
+        display: block;
+        font-weight: bold;
+        color: white;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+        text-align: center;
+    }
+    .sidebar a:hover {
+        background-color: #b482e7;
+    }
+    .sidebar .btn-logout {
+        width: 100%;
+        background-color: #dc3545;
+        border: none;
+        padding: 15px; /* Increased padding */
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+        margin-top: 30px; /* Increased top margin */
+        text-align: center;
+        transition: background-color 0.3s ease;
+    }
+    .sidebar .btn-logout:hover {
+        background-color: #a91e35;
+    }
+
+    /* Content styling */
+    .content {
+        margin-left: 260px;
+        padding: 30px; /* Increased padding */
+        overflow-x: hidden; /* Prevent horizontal scrolling for main content */
+    }
+    .content h2 {
+        color: #5c2d91;
+        font-weight: bold;
+        margin-bottom: 20px; /* Increased bottom margin */
+    }
+
+    /* Vertical layout for project categories */
+    .project-category {
+        margin-bottom: 40px; /* Increased bottom margin for better separation */
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(92, 45, 145, 0.2);
+    }
+    .project-category h3 {
+        text-align: center;
+        color: #5c2d91;
+        font-weight: bold;
+        margin-bottom: 20px; /* Increased bottom margin */
+    }
+
+    /* Card styling */
+    .card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(92, 45, 145, 0.2);
+        padding: 25px; /* Increased padding for cards */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 20px; /* Space between cards */
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 18px rgba(92, 45, 145, 0.3);
+    }
+    .card h5 {
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .card p {
+        margin: 10px 0; /* Increased margin for paragraphs */
+    }
+    .card .card-actions {
+        display: flex;
+        gap: 15px; /* Increased gap between buttons */
+        margin-top: 20px; /* Increased top margin */
+    }
+    .btn-primary, .btn-warning, .btn-danger {
+        font-size: 0.875em;
+        padding: 10px 15px; /* Increased padding for buttons */
+        border-radius: 5px;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="sidebar">
+    <h4>Navigation</h4>
+    {% if user.is_superuser %}
+                <a href="{% url 'create_quotation' %}">Create a Quote</a>
+            {% else %}
+                 <a href="{% url 'create_quotation' %}">Request a Quote</a>
+            {% endif %}
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-logout">Log Out</button>
+    </form>
+</div>
+
+<div class="content">
+    <h2>Project Quotations</h2>
+
+    {% for status, projects_list in projects.items %}
+        <div class="project-category">
+            <h3>{{ status|capfirst }} Projects</h3>
+            {% if projects_list %}
+                <div class="card-container">
+                    {% for project in projects_list %}
+                        <div class="card">
+                            <h5>Project ID: {{ project.id }}</h5>
+                            <p><strong>Description:</strong> {{ project.description }}</p>
+                            <p><strong>Location:</strong> {{ project.location }}</p>
+                            <p><strong>Status:</strong> {{ project.status }}</p>
+                            <div class="card-actions">
+                                <a href="{% url 'project_detail' project.id %}" class="btn btn-primary">View</a>
+                                {% if user.is_superuser %}
+                                    <a href="#" class="btn btn-danger">Delete</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="no-projects text-center">No {{ status }} projects found.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

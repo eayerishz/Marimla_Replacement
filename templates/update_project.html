@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details - Construction Project Quotation System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e8d3f4, #f3c1d9); /* Pastel galaxy colors */
+            font-family: Arial, sans-serif;
+            color: #333;
+            overflow: hidden; /* Optional: hides overflow for a cleaner look */
+        }
+        .project-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white for a softer look */
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        h2, h4 {
+            text-align: center;
+            color: #6a3e91; /* Darker pastel color */
+        }
+        .project-info {
+            margin-bottom: 30px; 
+            padding: 20px;
+            border: 1px solid #e3b8e6; /* Light border for separation */
+            border-radius: 10px;
+            background-color: #fff; /* White background for info */
+        }
+        .material-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .material-table th, .material-table td {
+            text-align: left;
+        }
+        .error-messages {
+            color: #d9534f; /* Bootstrap danger color for errors */
+            margin-bottom: 20px;
+        }
+        .btn {
+            margin-top: 10px; /* Space between buttons */
+            border-radius: 8px;
+        }
+        .btn-primary {
+            background-color: #9b59b6; /* Pastel purple */
+        }
+        .btn-primary:hover {
+            background-color: #a66bb4; /* Lighter purple for hover */
+        }
+        .btn-secondary {
+            background-color: #d1d1d1; /* Light gray for secondary */
+        }
+        .btn-secondary:hover {
+            background-color: #c0c0c0; /* Darker gray for hover */
+        }
+        /* Table styling */
+        .material-table th {
+            background-color: #e3b8e6; /* Light background for headers */
+            color: #6a3e91; /* Header text color */
+        }
+        .material-table tr:nth-child(even) {
+            background-color: #f8d6e4; /* Light pastel pink for alternating rows */
+        }
+        .material-table tr:nth-child(odd) {
+            background-color: #ffffff; /* White for odd rows */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="project-container">
+            <h2>Project Details</h2>
+
+            {% if user.is_superuser %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    {% if form.errors %}
+                        <div class="error-messages">
+                            {% for field, errors in form.errors.items %}
+                                <p>{{ field|capfirst }}: {{ errors|join:", " }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            {% else %}
+                <div class="project-info">
+                    <p><strong>Project ID:</strong> {{ project.id }}</p>
+                    <p><strong>Description:</strong> {{ project.description }}</p>
+                    <p><strong>Location:</strong> {{ project.location }}</p>
+                    <p><strong>Status:</strong> {{ project.status }}</p>
+                    <p><strong>Created On:</strong> {{ project.created_at }}</p>
+                    <p><strong>Updated On:</strong> {{ project.updated_at }}</p>
+                </div>
+            {% endif %}
+
+            {% if user.is_superuser %}
+                <h5 class="text-center">Action</h5>
+                <div class="text-center">
+                    <a href="{% url 'add_project_element' project.id %}" class="btn btn-primary">Add Project Element</a>
+                    <a href="{% url 'add_project_material' project.id %}" class="btn btn-primary">Add Material</a>
+                </div>
+            {% endif %}
+
+            <h4>Project Elements and Materials</h4>
+            <table class="table table-bordered material-table">
+                <thead>
+                    <tr>
+                        <th>Project Element</th>
+                        <th>Material</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Price per Qty</th>
+                        <th>Total Cost</th>
+                        <th>Markup %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for element in project.elements.all %}
+                        {% for material in element.materials.all %}
+                            <tr>
+                                <td>{{ element.name }}</td>
+                                <td>{{ material.name }}</td>
+                                <td>{{ material.quantity }}</td>
+                                <td>{{ material.unit }}</td>
+                                <td>${{ material.price_per_qty }}</td>
+                                <td>${{ material.total_cost }}</td>
+                                <td>{{ material.markup_percentage }}%</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="text-center">
+                <a href="{% url 'project_list' %}" class="btn btn-secondary">Back to Project List</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

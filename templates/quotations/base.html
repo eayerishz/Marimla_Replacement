@@ -2,9 +2,118 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CPQS{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Additional Page-Specific Styles -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url('https://i.imgur.com/J620n78.jpg');
+            background-blend-mode: multiply;
+            background-color: #111;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #ffffff;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        header {
+            background: rgba(30, 30, 30, 0.8);
+            padding: 2rem 0;
+            border-bottom: 5px solid #ff4081;
+        }
+        footer {
+            background: rgba(30, 30, 30, 0.8);
+            padding: 1rem 0;
+        }
+        .card {
+            border: none;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        .card-header {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-weight: 700;
+            border-top-left-radius: 1.5rem;
+            border-top-right-radius: 1.5rem;
+        }
+        .btn-custom {
+            background-color: #9b59b6;
+            color: white;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #8e44ad;
+        }
+        .lead {
+            font-size: 1.25rem;
+            font-weight: 300;
+            color: #ffffff;
+        }
+        .scroll-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 20px 0;
+            display: flex;
+            gap: 20px;
+        }
+        .scroll-container .card {
+            display: inline-block;
+            min-width: 300px;
+            flex: 0 0 auto;
+        }
+    </style>
+    {% block extra_styles %}{% endblock %}
 </head>
 <body>
+    <header class="text-white text-center">
+        <div class="container">
+            <h1 class="mb-0">Construction Project Quotation System</h1>
+            <p class="lead">Your reliable partner in project management.</p>
+        </div>
+    </header>
 
+    <main class="container mt-4 flex-grow-1">
+        {% block content %}
+        <div class="scroll-container">
+            {% for project in projects_list %}
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-clipboard-list"></i> Project {{ project.id }}
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Description:</strong> {{ project.description }}</p>
+                        <p><strong>Location:</strong> {{ project.location }}</p>
+                        <a href="#" class="btn btn-custom">View Details</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% endblock %}
+    </main>
+
+    <footer class="text-white text-center">
+        <p class="footer-text mb-0">&copy; 2024 | CPQS</p>
+    </footer>
+
+    <!-- Optional JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

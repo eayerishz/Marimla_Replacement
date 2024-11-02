@@ -1,0 +1,70 @@
+{% extends "quotations/base.html" %}
+{% load static %}
+
+{% block title %}CPQS{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="hero">
+        <h1>Welcome to the Construction Project Quotation System!</h1>
+        <p class="mt-4">
+            <a href="{% url 'register' %}" class="btn btn-custom btn-lg">Register</a>
+            <a href="{% url 'login' %}" class="btn btn-outline-custom btn-lg">Login</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_styles %}
+<style>
+    body {
+        background: linear-gradient(135deg, #0c1a4c, #5c4d9f, #9b59b6); /* Galaxy colors */
+        font-family: 'Roboto', sans-serif;
+        color: #ffffff; /* White text for contrast */
+    }
+    .hero {
+        background-color: rgba(30, 30, 30, 0.8); /* Semi-transparent dark background */
+        color: white;
+        padding: 60px 30px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 6px 30px rgba(255, 255, 255, 0.2);
+        margin-bottom: 50px;
+    }
+    footer {
+        margin-top: 50px;
+        text-align: center;
+        padding: 20px 0;
+        background-color: rgba(30, 30, 30, 0.8); /* Semi-transparent dark footer */
+        color: white;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+    }
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+    p {
+        font-size: 1.2rem;
+    }
+    .btn-custom {
+        background-color: #9b59b6; /* Purple button */
+        color: white;
+        border-radius: 20px;
+        transition: background-color 0.3s ease;
+    }
+    .btn-custom:hover {
+        background-color: #8e44ad; /* Darker purple on hover */
+    }
+    .btn-outline-custom {
+        border-color: #9b59b6; /* Purple outline */
+        color: #9b59b6; /* Purple text */
+        border-radius: 20px;
+    }
+    .btn-outline-custom:hover {
+        background-color: #9b59b6; /* Purple background on hover */
+        color: white; /* White text on hover */
+    }
+</style>
+{% endblock %}

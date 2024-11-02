@@ -1,0 +1,71 @@
+{% extends 'quotations/base.html' %}
+{% load static %}
+
+{% block title %}Register - CPQS{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background: linear-gradient(135deg, #0c1a4c, #5c4d9f, #9b59b6); /* Galaxy colors */
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff; /* White text for contrast */
+            margin: 0; /* Remove default margin */
+            height: 100vh; /* Full viewport height */
+            overflow-y: auto; /* Enable vertical scrolling for the body */
+        }
+        .register-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 30px;
+            background-color: rgba(30, 30, 30, 0.9); /* Dark background for better readability */
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            color: #ffffff; /* Ensure text is white for contrast */
+            margin-top: 50px; /* Add some space from the top */
+        }
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffffff; /* White for better contrast */
+        }
+        .btn-primary {
+            background-color: #9b59b6; /* Purple button */
+            color: white; /* White text */
+            border-radius: 20px;
+            width: 100%; /* Full width button */
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #8e44ad; /* Darker purple on hover */
+        }
+        .text-center a {
+            color: #9b59b6; /* Purple link color */
+            text-decoration: none; /* Remove underline */
+        }
+        .text-center a:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+        input {
+            font-size: 1rem; /* Ensure inputs are readable */
+            border-radius: 5px;
+            border: 1px solid #ccc; /* Light border for inputs */
+            padding: 10px; /* Padding inside inputs */
+            width: 100%; /* Full width for inputs */
+            margin-bottom: 15px; /* Space between inputs */
+        }
+    </style>
+
+    <div class="container mt-5">
+        <div class="register-container">
+            <h2>Register</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+            <div class="mt-3 text-center">
+                <a href="{% url 'login' %}">Already have an account? Login</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

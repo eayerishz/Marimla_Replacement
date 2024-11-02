@@ -1,0 +1,164 @@
+{% extends 'quotations/base.html' %}
+{% load static %}
+
+{% block title %}Create Project - Construction Project Quotation System{% endblock %}
+
+{% block content %}
+    <style>
+        /* Body background - pastel galaxy gradient */
+        body {
+            background: linear-gradient(135deg, #ffe3f3, #d4c4ff, #d4b9ff, #fcc1f0);
+            background-size: 400% 400%;
+            animation: gradientBackground 15s ease infinite;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .project-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
+            border-radius: 15px;
+            box-shadow: 0 6px 25px rgba(153, 102, 255, 0.2);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #5c2d91; /* Dark purple */
+            font-weight: bold;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #5c2d91;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #d3a4ff;
+            box-shadow: inset 0 1px 5px rgba(153, 102, 255, 0.1);
+        }
+
+        /* Custom purple-pink button */
+        .btn-custom {
+            background-color: #d3a4ff; /* Light purple */
+            color: #fff;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-custom:hover {
+            background-color: #b482e7; /* Slightly darker purple */
+        }
+
+        /* Secondary button */
+        .btn-secondary {
+            background-color: #ffb3d9; /* Light pink */
+            border: none;
+            color: #5c2d91;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            background-color: #ff94c2; /* Darker pink */
+        }
+
+        #materialsFieldset {
+            margin-top: 10px;
+            padding: 15px;
+            border: 1px solid #d3a4ff;
+            border-radius: 8px;
+            background-color: #fbe8ff; /* Soft pastel background */
+        }
+    </style>
+
+  <div class="container mt-5 flex-grow-1">
+    <div class="project-container">
+        <h2>Create a New Project</h2>
+        <form id="quotationForm" method="post" action="{% url 'create_quotation' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="area_size">Area Size (sq.m)</label>
+                <input type="number" class="form-control" id="area_size" name="area_size" required>
+            </div>
+            <div class="form-group">
+                <label>Select Project Elements:</label>
+                <div>
+                    <label><input type="radio" name="projectElement" value="Foundation" onclick="updateMaterials()"> Foundation</label><br>
+                    <label><input type="radio" name="projectElement" value="Walls" onclick="updateMaterials()"> Walls</label><br>
+                    <label><input type="radio" name="projectElement" value="Roof" onclick="updateMaterials()"> Roof</label><br>
+                    <label><input type="radio" name="projectElement" value="Flooring" onclick="updateMaterials()"> Flooring</label><br>
+                    <label><input type="radio" name="projectElement" value="Framing" onclick="updateMaterials()"> Framing</label><br>
+                    <label><input type="radio" name="projectElement" value="Window and Door Installation" onclick="updateMaterials()"> Window and Door Installation</label><br>
+                    <label><input type="radio" name="projectElement" value="Electrical" onclick="updateMaterials()"> Electrical</label><br>
+                    <label><input type="radio" name="projectElement" value="Plumbing" onclick="updateMaterials()"> Plumbing</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Select Materials:</label>
+                <fieldset id="materialsFieldset">
+                    <!-- Dynamic materials will be injected here -->
+                </fieldset>
+            </div>
+                <button type="submit" class="btn btn-primary">Request Quotation</button>
+        </form>
+        <a href="{% url 'project_list' %}" class="btn btn-secondary mt-3">View Project List</a>
+    </div>
+</div>
+
+    <script>
+        function updateMaterials() {
+            const materialsFieldset = document.getElementById('materialsFieldset');
+            materialsFieldset.innerHTML = '';
+
+            const selectedElement = document.querySelector('input[name="projectElement"]:checked');
+            if (!selectedElement) return;
+
+            let materials = [];
+
+            switch (selectedElement.value) {
+                case 'Foundation':
+                    materials = ['Concrete', 'Gravel'];
+                    break;
+                case 'Walls':
+                    materials = ['Brick', 'Drywall'];
+                    break;
+                case 'Roof':
+                    materials = ['Shingles', 'Metal'];
+                    break;
+                case 'Flooring':
+                    materials = ['Tile', 'Wood'];
+                    break;
+                case 'Framing':
+                    materials = ['Exterior Wall Framing', 'Roof Framing', 'Door Framing'];
+                    break;
+                case 'Window and Door Installation':
+                    materials = ['Barn Door', 'Sliding Door', 'Sliding Window'];
+                    break;
+                case 'Electrical':
+                    materials = ['Light Switches', 'Main Panel'];
+                    break;
+                case 'Plumbing':
+                    materials = ['Shower Fixture', 'Toilet Installation'];
+                    break;
+            }
+
+            materials.forEach(material => {
+                const label = document.createElement('label');
+                label.innerHTML = `<input type="radio" name="material" value="${material}"> ${material}`;
+                materialsFieldset.appendChild(label);
+                materialsFieldset.appendChild(document.createElement('br'));
+            });
+        }
+    </script>
+{% endblock %}
