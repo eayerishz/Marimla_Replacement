@@ -132,7 +132,7 @@
 
 {% block content %}
 <div class="sidebar">
-    <h4>Navigation</h4>
+    <h4>Welcome to CPQS {{ user.get_username }}!</h4> <!-- Displaying the user's name -->
     {% if user.is_superuser %}
         <a href="{% url 'create_quotation' %}">Create a Quote</a>
     {% else %}
@@ -143,6 +143,7 @@
         <button type="submit" class="btn btn-logout">Log Out</button>
     </form>
 </div>
+
 
 <div class="content">
     <h2>Project Quotations</h2>

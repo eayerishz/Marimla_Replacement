@@ -9,19 +9,9 @@
     <style>
         body {
             background: linear-gradient(135deg, #ffe3f3, #d4c4ff);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
             font-family: Arial, sans-serif;
             color: #333;
-            overflow: hidden; /* Prevent scrolling */
         }
-        
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
         .project-container {
             max-width: 1000px;
             margin: auto;
@@ -29,14 +19,11 @@
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            border: 2px solid #5c2d91; /* Added border */
         }
-
         h2, h4 {
             text-align: center;
             color: #5c2d91;
         }
-
         .project-info {
             margin-bottom: 30px;
             padding: 20px;
@@ -44,48 +31,38 @@
             border-radius: 8px;
             background-color: #f9f9f9;
         }
-
         .material-table {
             width: 100%;
             margin-bottom: 20px;
         }
-
         .material-table th, .material-table td {
             text-align: left;
             vertical-align: middle;
         }
-
         .error-messages {
             color: red;
             margin-bottom: 20px;
         }
-
         .btn {
             margin-top: 10px;
             border-radius: 8px;
         }
-
         .btn-primary {
             background-color: #5c2d91;
         }
-
         .btn-primary:hover {
             background-color: #7a46b7;
         }
-
         .btn-secondary {
             background-color: #6c757d;
         }
-
         .btn-secondary:hover {
             background-color: #5a6268;
         }
-
         .material-table th {
             background-color: #d4b9ff;
             color: #5c2d91;
         }
-
         .action-buttons {
             display: flex;
             gap: 5px;
@@ -123,74 +100,76 @@
             {% endif %}
 
             {% if user.is_superuser %}
-                <h5>Action</h5>
                 <a href="{% url 'add_project_element' project.id %}" class="btn btn-primary">Add Project Element</a>
                 <a href="{% url 'add_project_material' project.id %}" class="btn btn-primary">Add Material</a>
             {% endif %}
 
             <h4>Project Elements and Materials</h4>
-            <table class="table table-bordered material-table">
-                <thead>
-                    <tr>
-                        <th>Project Element</th>
-                        <th>Material</th>
-                        <th>Quantity</th>
-                        <th>Unit</th>
-                        <th>Price per Qty</th>
-                        <th>Total Cost</th>
-                        <th>Markup %</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for element in project.elements.all %}
-                        {% for material in element.materials.all %}
-                            <tr>
-                                <td>{{ element.name }}</td>
-                                <td>{{ material.name }}</td>
-                                {% if user.is_superuser %}
-                                    <td>
-                                        <form method="post" action="{% url 'update_material' material.id %}">
-                                            {% csrf_token %}
-                                            <input type="number" name="qty" value="{{ material.qty }}" min="0" required>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="unit" value="{{ material.unit }}" required>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="price_per_qty" value="{{ material.price_per_qty }}" step="0.01" required>
-                                    </td>
-                                    <td>${{ material.total_cost }}</td>
-                                    <td>
-                                        <input type="number" name="markup_percentage" value="{{ material.markup_percentage }}" min="0" step="0.01" required>
-                                    </td>
-                                    <td>{{ material.status|capfirst }}</td>
-                                    <td class="action-buttons">
-                                        <button type="submit" class="btn btn-success btn-sm">Update</button>
-                                        </form>
-                                    </td>
-                                {% else %}
-                                    <td>{{ material.qty }}</td>
-                                    <td>{{ material.unit }}</td>
-                                    <td>${{ material.price_per_qty }}</td>
-                                    <td>${{ material.total_cost }}</td>
-                                    <td>{{ material.markup_percentage }}%</td>
-                                    <td>{{ material.status|capfirst }}</td>
-                                    <td class="action-buttons">
-                                        <form method="post" action="{% url 'approve_material' project.id %}">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="material_id" value="{{ material.id }}">
-                                            <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
-                                            <button type="submit" name="action" value="decline" class="btn btn-danger btn-sm">Decline</button>
-                                        </form>
-                                    </td>
-                                {% endif %}
-                            </tr>
+            <div class="table-responsive"> <!-- Added this div for responsive behavior -->
+                <table class="table table-bordered material-table">
+                    <thead>
+                        <tr>
+                            <th>Project Element</th>
+                            <th>Material</th>
+                            <th>Quantity</th>
+                            <th>Unit</th>
+                            <th>Price per Qty</th>
+                            <th>Total Cost</th>
+                            <th>Markup %</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for element in project.elements.all %}
+                            {% for material in element.materials.all %}
+                                <tr>
+                                    <td>{{ element.name }}</td>
+                                    <td>{{ material.name }}</td>
+                                    {% if user.is_superuser %}
+                                        <td>
+                                            <form method="post" action="{% url 'update_material' material.id %}">
+                                                {% csrf_token %}
+                                                <input type="number" name="qty" value="{{ material.qty }}" min="0" required>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="unit" value="{{ material.unit }}" required>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="price_per_qty" value="{{ material.price_per_qty }}" step="0.01" required>
+                                        </td>
+                                        <td>${{ material.total_cost }}</td>
+                                        <td>
+                                            <input type="number" name="markup_percentage" value="{{ material.markup_percentage }}" min="0" step="0.01" required>
+                                        </td>
+                                        <td>{{ material.status|capfirst }}</td>
+                                        <td class="action-buttons">
+                                            <button type="submit" class="btn btn-success btn-sm">Update</button>
+                                            </form>
+                                        </td>
+                                    {% else %}
+                                        <td>{{ material.qty }}</td>
+                                        <td>{{ material.unit }}</td>
+                                        <td>${{ material.price_per_qty }}</td>
+                                        <td>${{ material.total_cost }}</td>
+                                        <td>{{ material.markup_percentage }}%</td>
+                                        <td>{{ material.status|capfirst }}</td>
+                                        <td class="action-buttons">
+                                            <form method="post" action="{% url 'approve_material' project.id %}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="material_id" value="{{ material.id }}">
+                                                <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
+                                                <button type="submit" name="action" value="decline" class="btn btn-danger btn-sm">Decline</button>
+                                            </form>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div> <!-- Closing div for responsive table -->
 
             <div class="text-center">
                 <a href="{% url 'project_list' %}" class="btn btn-secondary">Back to Project List</a>
