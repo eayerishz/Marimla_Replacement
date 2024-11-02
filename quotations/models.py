@@ -80,21 +80,23 @@ class Material(models.Model):
         'ProjectElement', related_name="materials", on_delete=models.CASCADE
     )
     name = models.CharField(max_length=255)
-    qty = models.FloatField()
+    qty = models.FloatField(default=0)  # Default value of 0 for quantity
     unit = models.CharField(max_length=50)
-    price_per_qty = models.FloatField()
-    markup_percentage = models.FloatField()
+    price_per_qty = models.FloatField(default=0)  # Default value of 0 for price per quantity
+    markup_percentage = models.FloatField(default=0)  # Default value of 0 for markup percentage
     status = models.CharField(
         max_length=10, choices=STATUS_CHOICES, default='pending'
     )
 
     @property
     def total_cost(self):
-        return self.qty * self.price_per_qty * (1 + self.markup_percentage / 100)
+        # Calculate total cost only if superuser has set qty, price_per_qty, and markup_percentage
+        if self.qty > 0 and self.price_per_qty > 0 and self.markup_percentage > 0:
+            return self.qty * self.price_per_qty * (1 + self.markup_percentage / 100)
+        return 0  # Return 0 if not properly set by the superuser
 
     def __str__(self):
         return self.name
-
 
 class Pricing(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)

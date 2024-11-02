@@ -54,9 +54,6 @@ def project_detail(request, project_id):
         "form": form,
     })
 
-
-
-
 from django.shortcuts import redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Material  # Import your Material model
@@ -67,11 +64,16 @@ def update_material(request, material_id):
 
     if request.method == 'POST':
         try:
-            # Fetch and convert the values from the POST request
-            material.qty = int(float(request.POST.get('qty', 0)))  # Convert to float first, then to int
-            material.unit = request.POST.get('unit')
-            material.price_per_qty = float(request.POST.get('price_per_qty', 0))
-            material.markup_percentage = float(request.POST.get('markup_percentage', 0))
+            # Set defaults to 0 or 'N/A' if values are not provided
+            qty = request.POST.get('qty')
+            material.qty = int(float(qty)) if qty else 0  # Default to 0
+
+            material.unit = request.POST.get('unit', 'N/A')  # Default to 'N/A'
+            price_per_qty = request.POST.get('price_per_qty')
+            material.price_per_qty = float(price_per_qty) if price_per_qty else 0.0  # Default to 0
+
+            markup_percentage = request.POST.get('markup_percentage')
+            material.markup_percentage = float(markup_percentage) if markup_percentage else 0.0  # Default to 0
 
             # Save the changes to the database
             material.save()
@@ -84,10 +86,6 @@ def update_material(request, material_id):
 
     return HttpResponse(status=405)  # Method Not Allowed for non-POST requests
 
-
-
-
-
 def home(request):
     projects = (
         Project.objects.all()
@@ -95,7 +93,6 @@ def home(request):
         else Project.objects.none()
     )
     return render(request, "quotations/home.html", {"projects": projects})
-
 
 def login_view(request):
     if request.method == "POST":
@@ -113,11 +110,9 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, "quotations/login.html", {"form": form})
 
-
 def user_logout(request):
     logout(request)
     return redirect("home")
-
 
 from django.shortcuts import render, redirect
 from .models import Project, ProjectElement, Material
@@ -149,10 +144,10 @@ def create_project(request):
         Material.objects.create(
             element=element,
             name=material_name,
-            qty=10,            # Replace with actual data if available
-            unit="pcs",
-            price_per_qty=100,  # Example default price
-            markup_percentage=10,
+            qty=0,             # Default value
+            unit="N/A",        # Default value
+            price_per_qty=0.0, # Default value
+            markup_percentage=0.0,  # Default value
         )
 
         return redirect(reverse('project_list'))  # Redirect to the project list view after creation
@@ -169,7 +164,6 @@ class ProjectDeleteView(DeleteView):
     model = Project
     template_name = 'project_confirm_delete.html'  # Create this template for confirmation
     success_url = reverse_lazy('project_list')  # Redirect to the project list page after deletion
-
 
 @login_required
 def project_list(request):
@@ -191,13 +185,11 @@ def project_list(request):
         }
     return render(request, "project_list.html", {"projects": projects})
 
-
 def approve_project(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     project.status = "Approved"
     project.save()
     return redirect("project_list")
-
 
 def admin_dashboard(request):
     pending_projects = Project.objects.filter(status="Pending")
@@ -219,7 +211,6 @@ def admin_dashboard(request):
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import Project, ProjectElement, Material
 from .forms import ProjectElementForm, MaterialForm
-
 
 def add_project_element(request, project_id):
     project = get_object_or_404(Project, id=project_id)
@@ -252,8 +243,6 @@ def add_project_material(request, project_id):
     return render(
         request, "add_project_material.html", {"project": project, "form": form}
     )
-
-
 
 @login_required
 def update_project(request, project_id):
@@ -300,7 +289,6 @@ class PricingListView(View):
 
         return render(request, 'pricing/pricing_list.html', {'pricings': pricings})
 
-
 # Create a new pricing entry (restricted to superusers)
 class PricingCreateView(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
@@ -316,7 +304,6 @@ class PricingCreateView(LoginRequiredMixin, UserPassesTestMixin, View):
             form.save()
             return redirect('pricing_list')  # Redirect to the list view after saving
         return render(request, 'pricing/pricing_form.html', {'form': form})
-
 
 # Update an existing pricing entry (restricted to superusers)
 class PricingUpdateView(LoginRequiredMixin, UserPassesTestMixin, View):
@@ -335,7 +322,6 @@ class PricingUpdateView(LoginRequiredMixin, UserPassesTestMixin, View):
             form.save()
             return redirect('pricing_list')  # Redirect to the list view after saving
         return render(request, 'pricing/pricing_form.html', {'form': form})
-
 
 # Delete a pricing entry (restricted to superusers)
 class PricingDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
@@ -374,7 +360,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Project
-
 
 @login_required
 def approve_project(request, project_id):

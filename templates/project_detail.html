@@ -32,7 +32,7 @@
             background-color: #f9f9f9;
         }
         .project-status {
-            font-size: 1.2em; /* Increase font size for visibility */
+            font-size: 1.2em; /* Increased font size for visibility */
             font-weight: bold;
             color: #d9534f; /* Change color for emphasis */
             margin-top: 10px; /* Add margin for spacing */
@@ -105,7 +105,7 @@
                     <p><strong>Area Size:</strong> {{ project.area_size }} sq.m</p>
                     <p><strong>Description:</strong> {{ project.description }}</p>
                     <p><strong>Location:</strong> {{ project.location }}</p>
-                    <p><strong>Status:</strong> <span class="project-status">{{ project.status }}</span></p> <!-- Increased visibility for status -->
+                    <p><strong>Status:</strong> <span class="project-status">{{ project.status }}</span></p>
                     <p><strong>Created On:</strong> {{ project.created_at }}</p>
                     <p><strong>Updated On:</strong> {{ project.updated_at }}</p>
                 </div>
@@ -141,32 +141,32 @@
                                     <td>{{ element.name }}</td>
                                     <td>{{ material.name }}</td>
                                     {% if user.is_superuser %}
-                                        <td>
-                                            <form method="post" action="{% url 'update_material' material.id %}">
-                                                {% csrf_token %}
-                                                <input type="number" name="qty" value="{{ material.qty }}" min="0" required>
-                                        </td>
-                                        <td>
-                                            <input type="text" name="unit" value="{{ material.unit }}" required>
-                                        </td>
-                                        <td>
-                                            <input type="number" name="price_per_qty" value="{{ material.price_per_qty }}" step="0.01" required>
-                                        </td>
-                                        <td>${{ material.total_cost }}</td>
-                                        <td>
-                                            <input type="number" name="markup_percentage" value="{{ material.markup_percentage }}" min="0" step="0.01" required>
-                                        </td>
-                                        <td class="action-buttons">
-                                            <button type="submit" class="btn btn-success btn-sm">Update</button>
-                                            </form>
-                                        </td>
-                                    {% else %}
-                                        <td>{{ material.qty }}</td>
-                                        <td>{{ material.unit }}</td>
-                                        <td>${{ material.price_per_qty }}</td>
-                                        <td>${{ material.total_cost }}</td>
-                                        <td>{{ material.markup_percentage }}%</td>
-                                    {% endif %}
+    <td>
+        <form method="post" action="{% url 'update_material' material.id %}">
+            {% csrf_token %}
+            <input type="number" name="qty" value="{{ material.qty }}" min="0" required>
+    </td>
+    <td>
+        <input type="text" name="unit" value="{{ material.unit }}" required>
+    </td>
+    <td>
+        <input type="number" name="price_per_qty" value="{{ material.price_per_qty }}" step="0.01" required>
+    </td>
+    <td>${{ material.total_cost }}</td>
+    <td>
+        <input type="number" name="markup_percentage" value="{{ material.markup_percentage }}" min="0" step="0.01" required>
+    </td>
+    <td class="action-buttons">
+        <button type="submit" class="btn btn-success btn-sm">Update</button>
+        </form>
+    </td>
+{% else %}
+    <td>{{ material.qty|default:0 }}</td> <!-- Display default if qty not set -->
+    <td>{{ material.unit|default:"N/A" }}</td> <!-- Display "N/A" if unit not set -->
+    <td>${{ material.price_per_qty|default:0 }}</td> <!-- Display default if price_per_qty not set -->
+    <td>${{ material.total_cost }}</td>
+    <td>{{ material.markup_percentage|default:0 }}%</td> <!-- Display default if markup_percentage not set -->
+{% endif %}
                                 </tr>
                             {% endfor %}
                         {% endfor %}
