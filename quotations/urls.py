@@ -21,4 +21,5 @@ urlpatterns = [
     path('pricings/create/', PricingCreateView.as_view(), name='pricing_create'),
     path('pricings/update/<int:pk>/', PricingUpdateView.as_view(), name='pricing_update'),
     path('pricings/delete/<int:pk>/', PricingDeleteView.as_view(), name='pricing_delete'),
+    path('projects/<int:project_id>/approve_material/', views.approve_material, name='approve_material'),
 ]

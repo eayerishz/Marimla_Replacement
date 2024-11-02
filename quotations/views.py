@@ -274,3 +274,22 @@ class PricingDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
         pricing = get_object_or_404(Pricing, pk=pk)
         pricing.delete()
         return redirect('pricing_list')  # Redirect to the list view after deleting
+
+@login_required
+def approve_material(request, project_id):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        material_id = request.POST.get('material_id')
+
+        # Get the material object
+        material = get_object_or_404(Material, id=material_id)
+
+        # Update the material's status based on the action
+        if action == 'approve':
+            material.status = 'approved'
+        elif action == 'decline':
+            material.status = 'declined'
+
+        material.save()
+
+    return redirect('project_detail', project_id=project_id)

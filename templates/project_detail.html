@@ -13,7 +13,7 @@
             color: #333;
         }
         .project-container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: auto;
             padding: 30px;
             background-color: rgba(255, 255, 255, 0.9);
@@ -25,11 +25,11 @@
             color: #5c2d91;
         }
         .project-info {
-            margin-bottom: 30px; /* Increased space for clarity */
+            margin-bottom: 30px;
             padding: 20px;
-            border: 1px solid #d4c4ff; /* Light border for separation */
+            border: 1px solid #d4c4ff;
             border-radius: 8px;
-            background-color: #f9f9f9; /* Light background for info */
+            background-color: #f9f9f9;
         }
         .material-table {
             width: 100%;
@@ -37,31 +37,35 @@
         }
         .material-table th, .material-table td {
             text-align: left;
+            vertical-align: middle;
         }
         .error-messages {
             color: red;
             margin-bottom: 20px;
         }
         .btn {
-            margin-top: 10px; /* Space between buttons */
+            margin-top: 10px;
             border-radius: 8px;
         }
         .btn-primary {
-            background-color: #5c2d91; /* Your primary color */
+            background-color: #5c2d91;
         }
         .btn-primary:hover {
-            background-color: #7a46b7; /* Darker version for hover */
+            background-color: #7a46b7;
         }
         .btn-secondary {
-            background-color: #6c757d; /* Bootstrap secondary color */
+            background-color: #6c757d;
         }
         .btn-secondary:hover {
-            background-color: #5a6268; /* Darker version for hover */
+            background-color: #5a6268;
         }
-        /* Table styling */
         .material-table th {
-            background-color: #d4b9ff; /* Light background for headers */
-            color: #5c2d91; /* Header text color */
+            background-color: #d4b9ff;
+            color: #5c2d91;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
         }
     </style>
 </head>
@@ -111,6 +115,10 @@
                         <th>Price per Qty</th>
                         <th>Total Cost</th>
                         <th>Markup %</th>
+                        <th>Status</th>
+                        {% if not user.is_superuser %}
+                            <th>Action</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -124,6 +132,18 @@
                                 <td>${{ material.price_per_qty }}</td>
                                 <td>${{ material.total_cost }}</td>
                                 <td>{{ material.markup_percentage }}%</td>
+                                <td>{{ material.status|capfirst }}</td> <!-- Displaying the status -->
+
+                                {% if not user.is_superuser %}
+                                    <td class="action-buttons">
+                                        <form method="post" action="{% url 'approve_material' project.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="material_id" value="{{ material.id }}">
+                                            <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
+                                            <button type="submit" name="action" value="decline" class="btn btn-danger btn-sm">Decline</button>
+                                        </form>
+                                    </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     {% endfor %}

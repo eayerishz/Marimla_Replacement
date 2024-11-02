@@ -66,15 +66,26 @@ class ProjectElement(models.Model):
         return f"Element of {self.project.name}"
 
 
+from django.db import models
+
 class Material(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('declined', 'Declined'),
+    ]
+
     element = models.ForeignKey(
-        ProjectElement, related_name="materials", on_delete=models.CASCADE
+        'ProjectElement', related_name="materials", on_delete=models.CASCADE
     )
     name = models.CharField(max_length=255)
     qty = models.FloatField()
     unit = models.CharField(max_length=50)
     price_per_qty = models.FloatField()
     markup_percentage = models.FloatField()
+    status = models.CharField(
+        max_length=10, choices=STATUS_CHOICES, default='pending'
+    )
 
     @property
     def total_cost(self):
@@ -82,6 +93,7 @@ class Material(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Pricing(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
