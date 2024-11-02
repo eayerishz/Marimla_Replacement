@@ -18,34 +18,38 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-image: url('https://i.imgur.com/J620n78.jpg');
-            background-blend-mode: multiply;
-            background-color: #111;
+            background: linear-gradient(135deg, #f0f2f5, #ffffff); /* Light gradient for a clean look */
+            color: #333; /* Darker text for better contrast */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            color: #ffffff;
-            overflow-x: hidden;
-            overflow-y: auto;
         }
         header {
             background: rgba(30, 30, 30, 0.8);
             padding: 2rem 0;
             border-bottom: 5px solid #ff4081;
+            color: white;
         }
         footer {
             background: rgba(30, 30, 30, 0.8);
             padding: 1rem 0;
+            color: white;
+            text-align: center;
         }
         .card {
             border: none;
             border-radius: 1.5rem;
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
-            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            background-color: rgba(255, 255, 255, 0.9); /* Lighter card background */
             margin-bottom: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.02); /* Slight zoom effect on hover */
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
         }
         .card-header {
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: #007bff; /* Primary color for header */
             color: #ffffff;
             font-weight: 700;
             border-top-left-radius: 1.5rem;
@@ -79,15 +83,6 @@
         }
     </style>
     {% block extra_styles %}{% endblock %}
-</head>
-<body>
-    <header class="text-white text-center">
-        <div class="container">
-            <h1 class="mb-0">Construction Project Quotation System</h1>
-            <p class="lead">Your reliable partner in project management.</p>
-        </div>
-    </header>
-
     <main class="container mt-4 flex-grow-1">
         {% block content %}
         <div class="scroll-container">
@@ -106,10 +101,6 @@
         </div>
         {% endblock %}
     </main>
-
-    <footer class="text-white text-center">
-        <p class="footer-text mb-0">&copy; 2024 | CPQS</p>
-    </footer>
 
     <!-- Optional JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

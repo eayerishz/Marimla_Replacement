@@ -1,70 +1,128 @@
-{% extends "quotations/base.html" %}
-{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CPQS{% endblock %}</title>
 
-{% block title %}CPQS{% endblock %}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-{% block content %}
-<div class="container mt-5">
-    <div class="hero">
-        <h1>Welcome to the Construction Project Quotation System!</h1>
-        <p class="mt-4">
-            <a href="{% url 'register' %}" class="btn btn-custom btn-lg">Register</a>
-            <a href="{% url 'login' %}" class="btn btn-outline-custom btn-lg">Login</a>
-        </p>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Additional Page-Specific Styles -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* Stack children vertically */
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ff7f50, #ff69b4, #ba55d3, #9370db, #8a2be2); /* Gradient for galaxy theme */
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite; /* Animation for gradient background */
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            flex: 1; /* Allow container to grow and fill available space */
+            display: flex;
+            justify-content: center; /* Center items horizontally */
+            align-items: center; /* Center items vertically */
+        }
+
+        .hero {
+            background-color: rgba(30, 30, 30, 0.8); /* Dark semi-transparent background */
+            color: #fff; /* White text */
+            padding: 60px 40px;
+            border-radius: 20px; /* Rounded corners */
+            text-align: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            max-width: 700px; /* Max width for container */
+            width: 100%; /* Full width for responsiveness */
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 700; /* Bold for emphasis */
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px; /* Added space below paragraph */
+        }
+
+        .btn-custom {
+            background-color: #ff69b4; /* Bright pink button */
+            color: white;
+            border-radius: 20px;
+            transition: background-color 0.3s ease;
+            padding: 12px 25px; /* Larger padding */
+            font-size: 1.1rem;
+            border: none; /* No border */
+        }
+
+        .btn-custom:hover {
+            background-color: #ff1493; /* Darker pink on hover */
+        }
+
+        .btn-outline-custom {
+            border: 2px solid #ff69b4; /* Pink outline */
+            color: #ff69b4; /* Pink text */
+            border-radius: 20px;
+            padding: 12px 25px; /* Larger padding */
+            font-size: 1.1rem;
+            background-color: transparent; /* Transparent background */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-outline-custom:hover {
+            background-color: #ff69b4; /* Pink background on hover */
+            color: white; /* White text on hover */
+        }
+
+        footer {
+            background: rgba(30, 30, 30, 0.8); /* Dark semi-transparent background */
+            padding: 1rem 0; /* Padding for footer */
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+    {% block extra_styles %}{% endblock %}
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="hero">
+            <h1>Welcome to the Construction Project Quotation System!</h1>
+            <p class="mt-4">
+                <a href="{% url 'register' %}" class="btn btn-custom btn-lg">Register</a>
+                <a href="{% url 'login' %}" class="btn btn-outline-custom btn-lg">Login</a>
+            </p>
+        </div>
     </div>
-</div>
-{% endblock %}
 
-{% block extra_styles %}
-<style>
-    body {
-        background: linear-gradient(135deg, #0c1a4c, #5c4d9f, #9b59b6); /* Galaxy colors */
-        font-family: 'Roboto', sans-serif;
-        color: #ffffff; /* White text for contrast */
-    }
-    .hero {
-        background-color: rgba(30, 30, 30, 0.8); /* Semi-transparent dark background */
-        color: white;
-        padding: 60px 30px;
-        border-radius: 10px;
-        text-align: center;
-        box-shadow: 0 6px 30px rgba(255, 255, 255, 0.2);
-        margin-bottom: 50px;
-    }
-    footer {
-        margin-top: 50px;
-        text-align: center;
-        padding: 20px 0;
-        background-color: rgba(30, 30, 30, 0.8); /* Semi-transparent dark footer */
-        color: white;
-        position: relative;
-        bottom: 0;
-        width: 100%;
-    }
-    h1 {
-        font-size: 2.5rem;
-        margin-bottom: 20px;
-    }
-    p {
-        font-size: 1.2rem;
-    }
-    .btn-custom {
-        background-color: #9b59b6; /* Purple button */
-        color: white;
-        border-radius: 20px;
-        transition: background-color 0.3s ease;
-    }
-    .btn-custom:hover {
-        background-color: #8e44ad; /* Darker purple on hover */
-    }
-    .btn-outline-custom {
-        border-color: #9b59b6; /* Purple outline */
-        color: #9b59b6; /* Purple text */
-        border-radius: 20px;
-    }
-    .btn-outline-custom:hover {
-        background-color: #9b59b6; /* Purple background on hover */
-        color: white; /* White text on hover */
-    }
-</style>
-{% endblock %}
+    <footer class="text-white">
+        <p class="footer-text mb-0">&copy; 2024 | CPQS</p>
+    </footer>
+
+    <!-- Optional JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
