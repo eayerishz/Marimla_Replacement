@@ -1,0 +1,93 @@
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore Python files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+venv.bak/
+*.pyc
+
+# Ignore virtual environment
+.vscode/
+.idea/
+.PyCharm/
+
+# Ignore project-specific files
+*.log
+*.sqlite3
+*.env
+
+# Ignore compiled code
+*.class
+*.o
+*.so
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Ignore macOS-specific files
+.DS_Store
+
+# Ignore Windows-specific files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Ignore node modules
+node_modules/
+
+# Ignore coverage and testing results
+coverage/
+*.cover
+*.coverage
+*.coveragerc
+.coverage.*
+
+# Ignore temporary files
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Ignore build files and dependencies
+build/
+dist/
+*.egg-info/
+.eggs/
+.installed.cfg
+*.egg
+*.manifest
+MANIFEST
+
+# Ignore logs and temporary files
+*.log
+*.out
+*.tmp
+
+# Ignore archives and compressed files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Ignore database files
+*.sql
+*.db
+*.sqlite3
+
+# Ignore JetBrains IDE project files
+.idea/
+*.iml
+
+# Ignore system files
+._*
+*.DS_Store
+.Spotlight-V100
+.Trashes
