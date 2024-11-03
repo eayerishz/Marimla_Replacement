@@ -395,3 +395,10 @@ def decline_project(request, project_id):
         messages.warning(request, "You do not have permission to decline this project.")
 
     return redirect('project_list')
+
+@login_required
+def remove_material(request, material_id):
+    material = get_object_or_404(Material, id=material_id)
+    project_id = material.element.project.id
+    material.delete()
+    return redirect('project_detail', project_id=project_id)

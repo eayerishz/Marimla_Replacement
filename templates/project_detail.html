@@ -157,7 +157,14 @@
         <input type="number" name="markup_percentage" value="{{ material.markup_percentage }}" min="0" step="0.01" required>
     </td>
     <td class="action-buttons">
-        <button type="submit" class="btn btn-success btn-sm">Update</button>
+        <form method="post" action="{% url 'update_material' material.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm">Update</button>
+        </form>
+    
+        <form method="post" action="{% url 'remove_material' material.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
         </form>
     </td>
 {% else %}
@@ -176,10 +183,11 @@
 
             <div class="text-center">
                 <a href="{% url 'project_list' %}" class="btn btn-secondary">Back to Project List</a>
-                {% if not user.is_superuser %}
-                    <a href="{% url 'approve_project' project.id %}" class="btn btn-success">Approve</a>
-                    <a href="{% url 'decline_project' project.id %}" class="btn btn-danger">Decline</a>
+                {% if not user.is_superuser and project.status != 'Pending' and project.status != 'Completed' and project.status != 'Declined'%}
+                <a href="{% url 'approve_project' project.id %}" class="btn btn-success">Approve</a>
+                <a href="{% url 'decline_project' project.id %}" class="btn btn-danger">Decline</a>
                 {% endif %}
+
             </div>
         </div>
 

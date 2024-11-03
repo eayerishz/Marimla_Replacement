@@ -26,4 +26,5 @@ urlpatterns = [
     path('update-material/<int:material_id>/', views.update_material, name='update_material'),  # Include your update material pattern
     path('approve_project/<int:project_id>/', views.approve_project, name='approve_project'),
     path('decline_project/<int:project_id>/', views.decline_project, name='decline_project'),
+    path('remove-material/<int:material_id>/', views.remove_material, name='remove_material'),
 ]
