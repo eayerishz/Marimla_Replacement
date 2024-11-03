@@ -73,8 +73,8 @@ Ensure you have Python and Django installed.
 
 1. **Clone the repository:**
    ```bash
-   git clone <https://github.com/eayerishz/cpqs.git>
-   cd <cpqs>
+   git clone <https://github.com/eayerishz/Marimla_Replacement.git>
+   cd <Marimla_Replacement>
 
 2. **Install Dependencies:**
    ```bash
